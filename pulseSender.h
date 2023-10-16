@@ -8,7 +8,7 @@ class PulseSender {
         Repeater repeater;
         bool high;
     public:
-        PulseSender();
+        void setup();
         void init();
         void start(int interval, int pulses);
         void interrupt();

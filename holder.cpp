@@ -1,43 +1,33 @@
 #include "holder.h"
 #include "stepperMotor.h"
 
-Holder::Holder(){
-    stepperMotor = StepperMotor();
-    interval = 1;
-    ppr = 200;
-    deltaTime = 1;
-    radius = 50; // fix needed
+void Holder::setup(int interval){
+    int ppr = 200;
+    radius = 10;
     openDistance = 300; // fix needed
     x = 207;
     y = 97;
     z = 57;
-    isClose = false;
-    isOpen = true; // Firstly, holder is open.
-    isClosing = false;
-    isOpening = false;
+    condition = Condition::Open; // Firstly, holder is open.
+    stepperMotor = StepperMotor();
+    stepperMotor.setup(interval, ppr);
 }
 
-void Holder::start(){
-    stepperMotor.init(interval, ppr);
-}
-
-void Holder::update(){
+void Holder::update(int deltaTime){
     stepperMotor.update(deltaTime);
     if (stepperMotor.getHasFinished()){
-        if (isClosing) {
-            isClose = true;
-            isClosing = false;
+        if (condition == Condition::Closing) {
+            condition = Condition::Close;
         }
-        if (isOpening){
-            isOpen = true;
-            isOpening = false;
+        if (condition == Condition::Opening){
+            condition = Condition::Open;
         }
     }
 }
 
 // holdType: 0 -> x, 1 -> y, 2 -> z
 void Holder::hold(int holdType, int num){
-    if (!isOpen) return;
+    if (condition != Condition::Open) return;
     double distance = 0;
     if (holdType == 0) {
         distance = x * num;
@@ -51,15 +41,13 @@ void Holder::hold(int holdType, int num){
     double diff = (openDistance - distance) / 2;
     double radian = diff / radius;
     stepperMotor.rotateInRadians(-radian);
-    isOpen = false;
-    isClosing = true;
+    condition = Condition::Closing;
 }
 
 void Holder::release(){
-    if (!isClose) return;
+    if (condition != Condition::Close) return;
     stepperMotor.setRotation(0);
-    isClose = false;
-    isOpening = true;
+    condition = Condition::Opening;
 }
 
 bool Holder::getHasFinished(){

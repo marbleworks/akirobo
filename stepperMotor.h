@@ -10,9 +10,10 @@ class StepperMotor {
         int ppr;
         int rotation;
         int tmpRotation;
+        bool tmpDirection;
     public:
-        StepperMotor();
-        void init(int interval, int ppr);
+        void setup(int interval, int ppr);
+        void init();
         void update(int deltaTime);
         void setRotation(int value); // (ex) ppr = 200 -> 1 = 360/200 deg
         void setRotationInRadians(double radian);

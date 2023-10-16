@@ -6,22 +6,16 @@
 class Holder {
     private:
         StepperMotor stepperMotor;
-        int interval;
-        int ppr;
-        int deltaTime;
         double radius;
         double openDistance;
         double x;
         double y;
         double z;
-        bool isClose;
-        bool isOpen;
-        bool isClosing;
-        bool isOpening;
+        enum class Condition {Close, Open, Closing, Opening};
+        enum class Condition condition;
     public:
-        Holder();
-        void start();
-        void update();
+        void setup(int interval);
+        void update(int deltaTime);
         void hold(int holdType, int num);
         void release();
         bool getHasFinished();

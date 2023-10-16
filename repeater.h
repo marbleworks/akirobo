@@ -11,7 +11,6 @@ class Repeater {
         bool flag;
         bool hasFinished;
     public:
-        Repeater();
         void init();
         void start(int interval, int pulses);
         void interrupt();

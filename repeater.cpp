@@ -1,15 +1,5 @@
 #include "repeater.h"
 
-Repeater::Repeater(){
-    timer = 0;
-    interval = 0;
-    repeatCount = 0;
-    currentRepeatCount = 0;
-    isRepeating = false;
-    flag = false;
-    hasFinished = false;
-}
-
 void Repeater::init(){
     timer = 0;
     interval = 0;
@@ -24,6 +14,7 @@ void Repeater::start(int interval, int repeatCount){
     init();
     this->interval = interval;
     this->repeatCount = repeatCount;
+    isRepeating = true;
 }
 
 void Repeater::interrupt(){
@@ -36,13 +27,13 @@ void Repeater::finish(){
 }
 
 void Repeater::update(int deltaTime){
+    flag = false;
     hasFinished = false;
     if (!isRepeating) return;
     timer += deltaTime;
-    flag = false;
     if (timer >= interval){
         timer = 0;
-        repeatCount++;
+        currentRepeatCount++;
         flag = true;
         if (currentRepeatCount >= repeatCount){
             finish();

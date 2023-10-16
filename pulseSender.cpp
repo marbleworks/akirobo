@@ -1,9 +1,9 @@
 #include "pulseSender.h"
-#include <math.h>
+#include <cmath>
+// additional include needed
 
-PulseSender::PulseSender(){
+void PulseSender::setup(){
     repeater = Repeater();
-    high = false;
 }
 
 void PulseSender::init(){
@@ -39,15 +39,15 @@ void PulseSender::sendToggle(){
 
 void PulseSender::send(bool high){
     if (high){
-        HAL_GPIO_WritePin(GPIOW,GPIO_PIN_1000,GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOW,GPIO_PIN_1000,GPIO_PIN_SET); // fix needed
     }
     else{
-        HAL_GPIO_WritePin(GPIOW,GPIO_PIN_1000,GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOW,GPIO_PIN_1000,GPIO_PIN_RESET); // fix needed
     }
 }
 
 int PulseSender::getCurrentPulses(){
-    return floor((double) repeater.getRepeatCount() / (double) 2) + 1;
+    return std::floor((double) repeater.getRepeatCount() / (double) 2) + 1;
 }
 
 bool PulseSender::getIsSending(){

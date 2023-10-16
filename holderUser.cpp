@@ -1,16 +1,14 @@
 #include "holder.h"
+// additional include needed
 
 extern "C"{
     int deltaTime = 1;
-    Holder holder = Holder();
+    int interval = 1;
+    Holder holder;
 
     void start(){
-        holder.start();
-    }
-
-    void update(){
-        input();
-        holder.update();
+        holder = Holder();
+        holder.setup(interval);
     }
 
     void input(){
@@ -22,12 +20,16 @@ extern "C"{
         }
     }
 
+    void update(){
+        input();
+        holder.update(deltaTime);
+    }
 
     void main_cpp(){
         start();
         while (true){
             update()
-            HAL_DELAY(deltaTime);
+            HAL_Delay(deltaTime);
         }
     }
 }

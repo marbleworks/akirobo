@@ -1,22 +1,26 @@
 #include "stepperMotor.h"
-#include <math.h>
+#include <cmath>
+#include <numbers>
+// additional include needed
 
-StepperMotor::StepperMotor(){
+void StepperMotor::setup(int interval, int ppr){
     pulseSender = PulseSender();
-    interval = 0;
-    ppr = 0;
-    rotation = 0;
-};
-
-void StepperMotor::init(int interval, int ppr){
+    pulseSender.setup();
     this->interval = interval;
     this->ppr = ppr;
+}
+
+void StepperMotor::init(){
+    rotation = 0;
+    tmpRotation = 0;
+    tmpDirection = false;
 }
 
 void StepperMotor::update(int deltaTime){
     pulseSender.update(deltaTime);
     if (pulseSender.getIsSending() || pulseSender.getHasFinished()){
-        rotation = tmpRotation + pulseSender.getCurrentPulses();
+        int multiplier = tmpDirection ? 1 : -1;
+        rotation = tmpRotation + pulseSender.getCurrentPulses() * multiplier;
         if (pulseSender.getHasFinished()){
             onFinishedRotation();
         }
@@ -34,8 +38,9 @@ void StepperMotor::setRotationInRadians(double radian){
 
 void StepperMotor::rotate(int value){
     tmpRotation = rotation;
-    setDirection(value >= 0);
-    pulseSender.start(interval, value);
+    tmpDirection = value >= 0;
+    setDirection(tmpDirection);
+    pulseSender.start(interval, std::abs(value));
 }
 
 void StepperMotor::rotateInRadians(double radian) {
@@ -57,7 +62,7 @@ void StepperMotor::setDirection(bool positive) {
 }
 
 int StepperMotor::radianToPulses(double radian){
-    return (int) round((radian * ppr) / (2 * M_PI));
+    return (int) std::round((radian * ppr) / (2 * std::numbers::pi));
 }
 
 bool StepperMotor::getHasFinished(){
