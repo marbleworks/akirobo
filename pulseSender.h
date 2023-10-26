@@ -6,9 +6,11 @@
 class PulseSender {
     private:
         Repeater repeater;
+        GPIO_TypeDef *pulseGpioX;
+        uint16_t pulseGpioPin;
         bool high;
     public:
-        void setup();
+        void setup(GPIO_TypeDef *pulseGpioX, uint16_t pulseGpioPin);
         void init();
         void start(int interval, int pulses);
         void interrupt();

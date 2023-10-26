@@ -1,16 +1,21 @@
 #include "holder.h"
-#include "stepperMotor.h"
+#include <usart.h>
 
 void Holder::setup(int interval){
     int ppr = 200;
-    radius = 10;
-    openDistance = 300; // fix needed
+    bool reversal = false;
+    GPIO_TypeDef *pulseGpioX = GPIO?;
+    GPIO_TypeDef *dirGpioX = GPIO?;
+    uint16_t pulseGpioPin = GPIO_PIN_?;
+    uint16_t dirGpioPin = GPIO_PIN_?;
+    radius = 13;
+    openDistance = 355;
     x = 207;
     y = 97;
     z = 57;
-    condition = Condition::Open; // Firstly, holder is open.
+    condition = Condition::Open;
     stepperMotor = StepperMotor();
-    stepperMotor.setup(interval, ppr);
+    stepperMotor.setup(interval, ppr, reversal, pulseGpioX, dirGpioX, pulseGpioPin, dirGpioPin);
 }
 
 void Holder::update(int deltaTime){

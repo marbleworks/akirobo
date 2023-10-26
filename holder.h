@@ -12,7 +12,7 @@ class Holder {
         double y;
         double z;
         enum class Condition {Close, Open, Closing, Opening};
-        enum class Condition condition;
+        Condition condition;
     public:
         void setup(int interval);
         void update(int deltaTime);

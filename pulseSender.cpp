@@ -1,9 +1,11 @@
 #include "pulseSender.h"
+#include <usart.h>
 #include <cmath>
-// additional include needed
 
-void PulseSender::setup(){
+void PulseSender::setup(GPIO_TypeDef *pulseGpioX, uint16_t pulseGpioPin){
     repeater = Repeater();
+    this->pulseGpioX = pulseGpioX;
+    this->pulseGpioPin = pulseGpioPin;
 }
 
 void PulseSender::init(){
@@ -39,10 +41,10 @@ void PulseSender::sendToggle(){
 
 void PulseSender::send(bool high){
     if (high){
-        HAL_GPIO_WritePin(GPIOW,GPIO_PIN_1000,GPIO_PIN_SET); // fix needed
+        HAL_GPIO_WritePin(pulseGpioX, pulseGpioPin, GPIO_PIN_SET);
     }
     else{
-        HAL_GPIO_WritePin(GPIOW,GPIO_PIN_1000,GPIO_PIN_RESET); // fix needed
+        HAL_GPIO_WritePin(pulseGpioX, pulseGpioPin, GPIO_PIN_RESET);
     }
 }
 

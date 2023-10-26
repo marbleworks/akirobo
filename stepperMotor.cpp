@@ -1,13 +1,16 @@
 #include "stepperMotor.h"
+#include <usart.h>
 #include <cmath>
 #include <numbers>
-// additional include needed
 
-void StepperMotor::setup(int interval, int ppr){
+void StepperMotor::setup(int interval, int ppr, bool reversal, GPIO_TypeDef *pulseGpioX, GPIO_TypeDef *dirGpioX, uint16_t pulseGpioPin, uint16_t dirGpioPin){
     pulseSender = PulseSender();
-    pulseSender.setup();
+    pulseSender.setup(pulseGpioX, pulseGpioPin);
     this->interval = interval;
     this->ppr = ppr;
+    this->reversal = reversal;
+    this->dirGpioX = dirGpioX;
+    this->dirGpioPin = dirGpioPin;
 }
 
 void StepperMotor::init(){
@@ -51,13 +54,12 @@ void StepperMotor::onFinishedRotation(){
     
 }
 
-// fix needed
 void StepperMotor::setDirection(bool positive) {
-    if (positive){
-        HAL_GPIO_WritePin(GPIOQ,GPIO_PIN_1000,GPIO_PIN_SET); // Process needed to open the holder.
+    if (positive ^ reversal){
+        HAL_GPIO_WritePin(dirGpioX, dirGpioPin, GPIO_PIN_SET);
     }
     else{
-        HAL_GPIO_WritePin(GPIOQ,GPIO_PIN_1000,GPIO_PIN_SET); // Process needed to close the holder.
+        HAL_GPIO_WritePin(dirGpioX, dirGpioPin, GPIO_PIN_RESET);
     }
 }
 
